@@ -1,0 +1,19 @@
+How it works (key variables / pipeline)
+
+Transcript loader: retrieves the transcript into the variable RAG_system.transcript.
+Splitter: the RAG_system.splitter (RecursiveCharacterTextSplitter) creates RAG_system.chunks.
+Embeddings: created using RAG_system.embedding (HuggingFaceEmbeddings).
+Vector index: stored in RAG_system.vector_store (FAISS). You can query it via RAG_system.retriver.
+LLM & chat wrapper: RAG_system.llm and RAG_system.model are Hugging Face endpoint + ChatHuggingFace.
+Prompt & parser: RAG_system.prompt (PromptTemplate) and RAG_system.parser (StrOutputParser).
+Helper: RAG_system.fromat_docs — formats retrieved docs into a single context string (note: function name in code is fromat_docs).
+Execution graph:
+RAG_system.parallel_chain builds a retriever + question parallel step.
+RAG_system.chain composes the pipeline: retrieve -> prompt -> model -> parse.
+Final output stored in RAG_system.result and printed.
+Usage notes and caveats
+
+The script uses a fixed video_id ("wjZofJX0v4") — change as needed in RAG_system.py.
+The helper name fromat_docs appears to be a misspelling of format_docs — keep or rename depending on preference.
+Errors from YouTube transcript retrieval are caught and printed.
+FAISS index is built at runtime from the transcript chunks (no persistence in current implementation).
